@@ -17,6 +17,10 @@ export class Scene extends Phaser.Scene {
   blackCirclePosition: Phaser.Math.Vector2;
   whiteCirclePosition: Phaser.Math.Vector2;
 
+  score = 0;
+
+  scoreText: Phaser.GameObjects.Text;
+
   constructor(config) {
     super(config);
   }
@@ -25,9 +29,14 @@ export class Scene extends Phaser.Scene {
     this.load.setBaseURL("src/assets/");
     this.load.image("pattern", "yinyang.svg");
     this.load.image("whitecircle", "whitecircle.svg");
+    this.load.image("grassplace", "places/grass.jpg");
   }
 
   create() {
+    const bg = this.add.image(0, 0, "grassplace").setOrigin(0, 0);
+    bg.displayWidth = this.game.config.width as number;
+    bg.displayHeight = this.game.config.height as number;
+
     this.createLogTexts();
     let width = this.game.config.width as number;
     let height = this.game.config.height as number;
@@ -69,40 +78,69 @@ export class Scene extends Phaser.Scene {
       this.whiteCircle.y
     );
 
-
-
-
-     
-
-    // Rastgele dairelerin eklenmesi
-    var numCircles = 2;
-    var angleStep = 360 / numCircles; // Dağıtım açısı adımı
-
     var circlegroup = this.add.group();
 
-    for (var i = 0; i < numCircles; i++) {
-      var angle = angleStep * i; // Açı hesaplanıyor
-      var radius = 53;
-      var circleX = this.pattern.x + radius * Math.cos((angle * Math.PI) / 180);
-      var circleY = this.pattern.y + radius * Math.sin((angle * Math.PI) / 180);
+    // İlk dairenin rastgele açısı
+    var firstCircleAngle = Phaser.Math.Between(0, 360);
 
-      var minDistance = 50; // Minimum uzaklık
-      var circleX = this.pattern.x + radius * Math.cos((angle * Math.PI) / 180);
-      var circleY = this.pattern.y + radius * Math.sin((angle * Math.PI) / 180);
-      var circleType = Math.random() > 0.5 ? "whitecircle" : "blackcircle"; // Rastgele siyah veya beyaz
-      const sprite = this.add.sprite(circleX, circleY, "whitecircle");
+    var radius = 53;
 
-      if (circleType === "blackcircle") {
-        sprite.setTint(0x000000);
-      }
+    // İlk dairenin konumu
+    var firstCircleX =
+      this.pattern.x + radius * Math.cos((firstCircleAngle * Math.PI) / 180);
+    var firstCircleY =
+      this.pattern.y + radius * Math.sin((firstCircleAngle * Math.PI) / 180);
 
-      sprite.scale = this.PATTERN_SCALE;
-      sprite.setInteractive();
+    // İlk daireyi rastgele siyah veya beyaz yapın
+    var firstCircleType = Math.random() > 0.5 ? "whitecircle" : "blackcircle";
 
-      circlegroup.add(sprite);
+    const firstCircle = this.add.sprite(
+      firstCircleX,
+      firstCircleY,
+      "whitecircle"
+    );
+
+    if (firstCircleType === "blackcircle") {
+      firstCircle.setTint(0x000000);
     }
 
-    // circlegroup z-index ayarı 
+    firstCircle.scale = this.PATTERN_SCALE;
+    firstCircle.setInteractive();
+
+    circlegroup.add(firstCircle);
+
+    // İkinci daireyi yerleştirirken 180 derece farkını kullanın
+    var secondCircleAngle = firstCircleAngle + 180;
+    if (secondCircleAngle >= 360) {
+      secondCircleAngle -= 360;
+    }
+
+    // İkinci dairenin konumu
+    var secondCircleX =
+      this.pattern.x + radius * Math.cos((secondCircleAngle * Math.PI) / 180);
+    var secondCircleY =
+      this.pattern.y + radius * Math.sin((secondCircleAngle * Math.PI) / 180);
+
+    // İkinci daireyi rastgele olarak ilk dairenin zıttı yapın
+    var secondCircleType =
+      firstCircleType === "whitecircle" ? "blackcircle" : "whitecircle";
+
+    const secondCircle = this.add.sprite(
+      secondCircleX,
+      secondCircleY,
+      "whitecircle"
+    );
+
+    if (secondCircleType === "blackcircle") {
+      secondCircle.setTint(0x000000);
+    }
+
+    secondCircle.scale = this.PATTERN_SCALE;
+    secondCircle.setInteractive();
+
+    circlegroup.add(secondCircle);
+
+    // circlegroup z-index ayarı
     this.children.bringToTop(this.pattern);
 
     this.scale.on("orientationchange", (orientation) => {
@@ -126,7 +164,20 @@ export class Scene extends Phaser.Scene {
     this.pattern.setInteractive();
 
     this.pattern.on("pointerdown", () => {
-      this.patternSpeed += 1;
+      const buffer = 20;
+
+      if (
+        firstCircleType === "blackcircle" &&
+        firstCircle.x > this.blackCircle.x - buffer &&
+        firstCircle.x < this.blackCircle.x + buffer &&
+        firstCircle.y > this.blackCircle.y - buffer &&
+        firstCircle.y < this.blackCircle.y + buffer
+      ) {
+        this.score += 1;
+        this.patternSpeed += 1;
+        this.scoreText.setText("SCORE: " + this.score);
+      }
+
       if (this.currentRotation === "clockwise") {
         this.currentRotation = "anticlockwise";
       } else {
@@ -176,6 +227,11 @@ export class Scene extends Phaser.Scene {
     this.uiManager.create();
 
     const currentFPS = this.uiManager.addText("FPS: 0", 50, 30, {
+      fontSize: "30px",
+      color: "#FFFFFF",
+    });
+
+    this.scoreText = this.uiManager.addText("SCORE: 0", 50, 175, {
       fontSize: "30px",
       color: "#FFFFFF",
     });
