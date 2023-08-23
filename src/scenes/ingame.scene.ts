@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import { AnalogControl } from "./analog.control";
-import { UIManager } from "./ui.manager";
+import { UIManager } from "../ui.manager";
+import { ScenesEnum } from "./scenes";
 
-export class Scene extends Phaser.Scene {
+export class InGameScene extends Phaser.Scene {
   platforms: Phaser.Physics.Arcade.StaticGroup;
   uiManager = new UIManager(this);
   private graphics: Phaser.GameObjects.Graphics;
@@ -21,8 +21,10 @@ export class Scene extends Phaser.Scene {
 
   scoreText: Phaser.GameObjects.Text;
 
-  constructor(config) {
-    super(config);
+  constructor() {
+    super({
+      key: ScenesEnum.InGameScene,
+    });
   }
 
   preload() {
@@ -33,11 +35,7 @@ export class Scene extends Phaser.Scene {
   }
 
   create() {
-    const bg = this.add.image(0, 0, "grassplace").setOrigin(0, 0);
-    bg.displayWidth = this.game.config.width as number;
-    bg.displayHeight = this.game.config.height as number;
-
-    this.createLogTexts();
+    // this.createLogTexts();
     let width = this.game.config.width as number;
     let height = this.game.config.height as number;
     let screenCenterX = width * 0.5;
