@@ -1,8 +1,10 @@
 import Phaser from "phaser";
 import { UIManager } from "../ui.manager";
 import { ScenesEnum } from "./scenes";
+import { Scene } from "./Scene";
+import { IngamePackKeysEnum, ingamepack } from "../assetpacks";
 
-export class InGameScene extends Phaser.Scene {
+export class InGameScene extends Scene {
   platforms: Phaser.Physics.Arcade.StaticGroup;
   uiManager = new UIManager(this);
   private graphics: Phaser.GameObjects.Graphics;
@@ -21,10 +23,12 @@ export class InGameScene extends Phaser.Scene {
 
   scoreText: Phaser.GameObjects.Text;
 
+  gameObjects: {
+    [key in IngamePackKeysEnum]?: Phaser.GameObjects.Image | null;
+  };
+
   constructor() {
-    super({
-      key: ScenesEnum.InGameScene,
-    });
+    super(ScenesEnum.InGameScene);
   }
 
   preload() {
@@ -32,6 +36,8 @@ export class InGameScene extends Phaser.Scene {
     this.load.image("pattern", "yinyang.svg");
     this.load.image("whitecircle", "whitecircle.svg");
     this.load.image("grassplace", "places/grass.jpg");
+
+    this.AssetPackLoader(ingamepack);
   }
 
   create() {
@@ -40,6 +46,13 @@ export class InGameScene extends Phaser.Scene {
     let height = this.game.config.height as number;
     let screenCenterX = width * 0.5;
     let screenCenterY = height * 0.5;
+
+    this.gameObjects = {
+      ...this.gameObjects,
+      [IngamePackKeysEnum.Heart]: this.add
+        .image(20, 20, IngamePackKeysEnum.Heart)
+        .setScale(0.1),
+    };
 
     this.pattern = this.add.image(screenCenterX, screenCenterY, "pattern");
     this.pattern.scale = this.PATTERN_SCALE;
@@ -52,7 +65,7 @@ export class InGameScene extends Phaser.Scene {
     this.blackCircle.scale = this.PATTERN_SCALE;
     this.blackCircle.setTint(0x000000);
     this.blackCircle.setInteractive();
-    this.blackCircle.setAlpha(0.5);
+    this.blackCircle.setAlpha(0.1);
     this.blackCircle.x = screenCenterX - 5;
     this.blackCircle.y = screenCenterY - 50;
     this.blackCirclePosition = new Phaser.Math.Vector2(
@@ -68,7 +81,7 @@ export class InGameScene extends Phaser.Scene {
     this.whiteCircle.scale = this.PATTERN_SCALE;
     this.whiteCircle.setTint(0xffffff);
     this.whiteCircle.setInteractive();
-    this.whiteCircle.setAlpha(0.5);
+    this.whiteCircle.setAlpha(0.1);
     this.whiteCircle.x = screenCenterX + -5;
     this.whiteCircle.y = screenCenterY + 50;
     this.whiteCirclePosition = new Phaser.Math.Vector2(
@@ -155,10 +168,10 @@ export class InGameScene extends Phaser.Scene {
       const { width, height } = gameSize;
       screenCenterX = width * 0.5;
       screenCenterY = height * 0.5;
-
       this.pattern.setPosition(screenCenterX, screenCenterY);
       this.cameras.resize(width, height);
     });
+    
     this.pattern.setInteractive();
 
     this.pattern.on("pointerdown", () => {

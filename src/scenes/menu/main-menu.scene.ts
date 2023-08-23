@@ -19,8 +19,21 @@ export class MainMenuScene extends Scene {
   }
 
   create() {
-    this.backgroundSound = this.sound.add(MenuPackKeysEnum.SmokeMusic);
-    this.backgroundSound.play();
+    this.scale.on("orientationchange", (orientation) => {
+      if (orientation.includes("portrait")) {
+        this.scale.setGameSize(this.gameWidth, this.gameHeight);
+      } else {
+        this.scale.setGameSize(this.gameHeight, this.gameWidth);
+      }
+    });
+
+    if (!this.backgroundSound) {
+      this.backgroundSound = this.sound.add(MenuPackKeysEnum.SmokeMusic);
+    }
+    if (!this.backgroundSound.isPlaying) {
+      this.backgroundSound.play();
+    }
+
     const currentVolume = parseFloat(localStorage.getItem("musicVolume")!) || 1;
     this.backgroundSound.manager.volume = currentVolume;
     this.createButtons();

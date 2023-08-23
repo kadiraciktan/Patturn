@@ -6,6 +6,7 @@ export enum MenuPackKeysEnum {
   BackButton = "backbutton",
   NextButton = "nextbutton",
   SmokeMusic = "smokemusic",
+  Heart = "heart",
 }
 
 const PackURL = "src/assets/menus/square/";
