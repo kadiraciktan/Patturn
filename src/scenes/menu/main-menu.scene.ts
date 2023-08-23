@@ -1,25 +1,28 @@
-import { ScenesEnum } from "./scenes";
-import { MenuPackKeysEnum, menuPack } from "../assetpacks";
+import { ScenesEnum } from "../scenes";
+import { MenuPackKeysEnum, menuPack } from "../../assetpacks";
 import Phaser from "phaser";
-import { UIManager } from "../ui.manager";
-import { Scene } from "./Scene";
+import { Scene } from "../Scene";
+import { MenuFontStyle } from "./menu.constants";
 
 export class MainMenuScene extends Scene {
   menuButtons: {
     [key in MenuPackKeysEnum]?: Phaser.GameObjects.Image | null;
   };
-  uiManager: UIManager = new UIManager(this);
 
   constructor() {
     super(ScenesEnum.MainMenuScene);
   }
 
   preload() {
-    this.LoadProps();
     this.AssetPackLoader(menuPack);
+    this.LoadProps();
   }
 
   create() {
+    this.backgroundSound = this.sound.add(MenuPackKeysEnum.SmokeMusic);
+    this.backgroundSound.play();
+    const currentVolume = parseFloat(localStorage.getItem("musicVolume")!) || 1;
+    this.backgroundSound.manager.volume = currentVolume;
     this.createButtons();
     this.menuButtons[MenuPackKeysEnum.PlayButton]?.on("pointerdown", () => {
       this.scene.start(ScenesEnum.InGameScene);
@@ -27,25 +30,13 @@ export class MainMenuScene extends Scene {
     this.menuButtons[MenuPackKeysEnum.SettingsButton]?.on("pointerdown", () => {
       this.scene.start(ScenesEnum.SettingsScene);
     });
-
-    this.uiManager.addText(
+    const menuText = this.uiManager.addText(
       "Patturn",
-      this.screenCenterX - 190,
-      this.screenCenterY - 190,
-      {
-        fontSize: "90px",
-        color: "#000000",
-        shadow: {
-          color: "#000000",
-          fill: true,
-          offsetX: 2,
-          offsetY: 2,
-          blur: 8,
-        },
-        stroke: "#FFFFFF",
-        align: "center",
-      }
+      this.screenCenterX - 90,
+      this.screenCenterY - 120,
+      MenuFontStyle
     );
+    menuText.setScale(0.5);
   }
 
   createButtons() {

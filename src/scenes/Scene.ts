@@ -1,4 +1,5 @@
 import { PackFileConfig } from "../assetpacks/pack-file.config";
+import { UIManager } from "../ui.manager";
 import { ScenesEnum } from "./scenes";
 
 export class Scene extends Phaser.Scene {
@@ -7,6 +8,8 @@ export class Scene extends Phaser.Scene {
   gameWidth: number;
   gameHeight: number;
   currentScene: ScenesEnum;
+  uiManager: UIManager = new UIManager(this);
+  backgroundSound: Phaser.Sound.BaseSound;
 
   constructor(key: ScenesEnum) {
     super({ key });
@@ -18,6 +21,7 @@ export class Scene extends Phaser.Scene {
     this.screenCenterX = this.gameWidth * 0.5;
     this.screenCenterY = this.gameHeight * 0.5;
     this.currentScene = this.scene.key as ScenesEnum;
+    this.uiManager.create();
   }
 
   AssetPackLoader(packs: PackFileConfig[]) {
