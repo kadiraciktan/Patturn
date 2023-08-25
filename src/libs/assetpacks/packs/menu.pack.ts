@@ -6,6 +6,8 @@ export enum BUTTON_PACK {
   BackButton = "backbutton",
   NextButton = "nextbutton",
   HomeButton = "homebutton",
+  PauseButton = "pausebutton",
+  RestartButton = "restartbutton",  
 }
 const PackURL = "menus/square/";
 
@@ -35,4 +37,15 @@ export const ButtonPack: PackFileConfigModel[] = [
     url: PackURL + "home.png",
     type: "image",
   },
+  {
+    key: BUTTON_PACK.PauseButton,
+    url: PackURL + "pause.png",
+    type: "image",
+  },
+  {
+    key: BUTTON_PACK.RestartButton,
+    url: PackURL + "return.png",
+    type: "image",
+  },
+
 ];

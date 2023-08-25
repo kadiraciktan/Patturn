@@ -10,17 +10,18 @@ export enum MENU_EVENTS {
   Back = "back",
   Home = "home",
   InGame = "ingame",
+  Continue = "continue",
 }
 
 export enum MenuStateEnum {
   Play = "play",
   Settings = "settings",
   InGame = "ingame",
+  Home = "home",
 }
 
 @GameObject()
 export class MainMenuGameObject implements IGameObject {
-  private isActive: boolean = true;
   container: Phaser.GameObjects.Container;
   events: Phaser.Events.EventEmitter = new Phaser.Events.EventEmitter();
   menuRectangle: Phaser.GameObjects.Rectangle;
@@ -29,24 +30,28 @@ export class MainMenuGameObject implements IGameObject {
   SettingsButton: Phaser.GameObjects.Image;
   BackButton: Phaser.GameObjects.Image;
   HomeButton: Phaser.GameObjects.Image;
+  ContinueButton: Phaser.GameObjects.Image;
+  RestartButton: Phaser.GameObjects.Image;
 
   constructor(public scene: Scene) {}
 
   preload() {}
 
   create() {
+    this.container = this.scene.add.container(0, 0);
     if (this.menuState === MenuStateEnum.Play) {
       this.drawPlayScreen();
       this.drawPlayButton();
       this.drawSettingsButton();
       this.drawHomeButton();
       this.drawBackButton();
+      this.drawContinueButton();
+      this.drawRestartButton();
       this.PlayButton.setVisible(true);
     }
   }
 
   drawPlayScreen() {
-    this.container = this.scene.add.container(0, 0);
     this.menuRectangle = drawMenuRect(this.scene);
     this.container.add(this.menuRectangle);
     const rectGeom = this.menuRectangle.getBounds();
@@ -78,6 +83,42 @@ export class MainMenuGameObject implements IGameObject {
 
     this.PlayButton = playButton;
     return playButton;
+  }
+
+  drawRestartButton() {
+    const restartButton = this.scene.add
+      .image(
+        this.scene.screenCenterX,
+        this.scene.screenCenterY,
+        BUTTON_PACK.RestartButton
+      )
+      .setInteractive()
+      .setScale(0.3)
+      .setVisible(false)
+      .on("pointerdown", () => {
+        this.events.emit(MENU_EVENTS.Retry);
+      });
+
+    this.RestartButton = restartButton;
+    return restartButton;
+  }
+
+  drawContinueButton() {
+    const continueButton = this.scene.add
+      .image(
+        this.scene.screenCenterX,
+        this.scene.screenCenterY,
+        BUTTON_PACK.PlayButton
+      )
+      .setInteractive()
+      .setScale(0.3)
+      .setVisible(false)
+      .on("pointerdown", () => {
+        this.events.emit(MENU_EVENTS.Continue);
+      });
+
+    this.ContinueButton = continueButton;
+    return continueButton;
   }
 
   drawSettingsButton() {
@@ -122,7 +163,6 @@ export class MainMenuGameObject implements IGameObject {
   }
 
   drawSettingsScreen() {
-    this.container = this.scene.add.container(0, 0);
     this.menuRectangle = drawMenuRect(this.scene);
     this.container.add(this.menuRectangle);
     const rectGeom = this.menuRectangle.getBounds();
