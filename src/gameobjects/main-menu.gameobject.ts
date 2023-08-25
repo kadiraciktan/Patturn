@@ -175,8 +175,6 @@ export class MainMenuGameObject implements IGameObject {
       this.scene.calculatePercentage(30, rectGeom.height)
     );
     this.container.add(menuText);
-    this.BackButton = this.drawBackButton();
-    this.container.add(this.BackButton);
     this.container.setVisible(true);
   }
 
