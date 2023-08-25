@@ -1,17 +1,14 @@
-import { PackFileConfig } from "../pack-file.config";
+import { PackFileConfigModel } from "@patturn/engine";
 
 export enum MenuPackKeysEnum {
   PlayButton = "playbutton",
   SettingsButton = "settingsbutton",
   BackButton = "backbutton",
   NextButton = "nextbutton",
-  SmokeMusic = "smokemusic",
-  Heart = "heart",
 }
-
 const PackURL = "menus/square/";
 
-export const menuPack: Phaser.Types.Loader.FileConfig[] = [
+export const MenuPack: PackFileConfigModel[] = [
   {
     key: MenuPackKeysEnum.PlayButton,
     url: PackURL + "play.png",
@@ -31,10 +28,5 @@ export const menuPack: Phaser.Types.Loader.FileConfig[] = [
     key: MenuPackKeysEnum.NextButton,
     url: PackURL + "next.png",
     type: "image",
-  },
-  {
-    key: MenuPackKeysEnum.SmokeMusic,
-    url: "src/assets/sfx/smoke.mp3",
-    type: "audio",
   },
 ];

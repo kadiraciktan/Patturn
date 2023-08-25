@@ -18,9 +18,12 @@
     "baseUrl": "./",
     "outDir": "./dist", /* Redirect output structure to the directory. */
     "paths": {
-      "@patturn/lib": [
-        "src/libs/index.ts"
-      ]
+      "@patturn/engine": [
+        "src/libs/engine/index.ts"
+      ],
+      "@patturn/assetpacks": [
+        "src/libs/assetpacks/index.ts"
+      ],
     }
   }
 }

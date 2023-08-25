@@ -1,5 +1,8 @@
-import { PackFileConfig } from "./pack-file.config";
-export function AssetPackLoader(packs: PackFileConfig[], scene: Phaser.Scene) {
+import { PackFileConfigModel } from "../models";
+export function AssetPackLoader(
+  packs: PackFileConfigModel[],
+  scene: Phaser.Scene
+) {
   packs.forEach((pack) => {
     switch (pack.type) {
       case "image":

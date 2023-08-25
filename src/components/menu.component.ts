@@ -1,5 +1,5 @@
+import { MenuPackKeysEnum } from "@patturn/assetpacks";
 import Phaser from "phaser";
-import { MenuPackKeysEnum, menuPack } from "../assetpacks";
 
 export class MenuComponent {
   container: Phaser.GameObjects.Container;
@@ -15,10 +15,9 @@ export class MenuComponent {
   constructor(private scene: Phaser.Scene) {}
 
   preload() {
-    console.log("preload", menuPack);
 
-    const addedPack = this.scene.load.addPack(menuPack);
-    console.log("addedPack", addedPack);
+    // const addedPack = this.scene.load.addPack(menuPack);
+    // console.log("addedPack", addedPack);
   }
 
   draw() {
@@ -71,26 +70,6 @@ export class MenuComponent {
       this.calculatePercentage(30, rectGeom.height)
     );
     this.container.add(menuText);
-
-    // const playButton = this.scene.add.image(
-    //   0,
-    //   0,
-    //   menuPack[MenuPackKeysEnum.PlayButton].key
-    // );
-
-    // const playButtonGeom = playButton.getBounds();
-    // playButton.setPosition(
-    //   rectGeom.centerX - this.calculatePercentage(50, playButtonGeom.width),
-    //   this.calculatePercentage(50, rectGeom.height)
-    // );
-
-    // playButton.setInteractive();
-
-    // playButton.on("pointerdown", () => {
-    //   this.scene.scene.start("InGameScene");
-    // });
-
-    // this.container.add(playButton);
   }
 
   calculatePercentage(percentage: number, total: number) {

@@ -1,7 +1,8 @@
 import Phaser from "phaser";
-import { RectangleComponent } from "../components/rectangle.component";
+import { Scene } from "@patturn/engine";
+import { RectangleComponent } from "../components";
 
-export class TestScene extends Phaser.Scene {
+export class TestScene extends Scene {
   rectangleComponent: RectangleComponent = new RectangleComponent(this);
   menuContainer: Phaser.GameObjects.Container;
   constructor() {
@@ -9,10 +10,8 @@ export class TestScene extends Phaser.Scene {
   }
   preload() {
     this.load.image("logo", "yinyang.svg");
-    console.log("TestScene Preload");
   }
   create() {
     this.add.image(400, 300, "logo");
-    console.log("TestScene Create");
   }
 }
