@@ -11,7 +11,7 @@ import {
 export class GameScene extends Scene {
   mainMenu = new MainMenuGameObject(this);
   spinWheel = new SpinWheelGameObject(this);
-  score: number = 1;
+  score: number = 0;
   constructor() {
     super("TestScene");
   }
@@ -22,12 +22,19 @@ export class GameScene extends Scene {
   create() {
     // draw Score Text
 
-    const scoreText = this.add.text(this.screenCenterX - 35, 0, "Score: 0", {
+    const scoreText = this.add.text(0, 0, "Score: 0", {
       fontSize: "32px",
       color: "#000",
-    });
+    }).setVisible(false);
+
+    const menuTextGeom = scoreText.getBounds();
+    scoreText.setPosition(
+      this.screenCenterX - menuTextGeom.width / 2,
+      menuTextGeom.height
+    );
 
     this.mainMenu.events.on(MENU_EVENTS.InGame, () => {
+      scoreText.setVisible(true);
       this.mainMenu.menuState = MenuStateEnum.InGame;
       this.spinWheel.isActive = true;
       this.mainMenu.hide();
@@ -38,6 +45,7 @@ export class GameScene extends Scene {
     });
 
     this.mainMenu.events.on(MENU_EVENTS.Settings, () => {
+      scoreText.setVisible(false);
       this.mainMenu.menuState = MenuStateEnum.Settings;
       this.spinWheel.isActive = false;
       this.mainMenu.hide();
@@ -50,6 +58,7 @@ export class GameScene extends Scene {
     });
 
     this.mainMenu.events.on(MENU_EVENTS.Home, () => {
+      scoreText.setVisible(false);
       this.mainMenu.menuState = MenuStateEnum.Home;
       this.mainMenu.show();
       this.mainMenu.drawPlayScreen();
@@ -74,6 +83,7 @@ export class GameScene extends Scene {
       this.score = 0;
       scoreText.setText(`Score: ${this.score}`);
       this.spinWheel.currentSpeed = 1;
+      scoreText.setVisible(true);
     });
 
     this.spinWheel.show();
