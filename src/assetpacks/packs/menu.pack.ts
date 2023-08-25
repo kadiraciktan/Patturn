@@ -9,9 +9,9 @@ export enum MenuPackKeysEnum {
   Heart = "heart",
 }
 
-const PackURL = "src/assets/menus/square/";
+const PackURL = "menus/square/";
 
-export const menuPack: PackFileConfig[] = [
+export const menuPack: Phaser.Types.Loader.FileConfig[] = [
   {
     key: MenuPackKeysEnum.PlayButton,
     url: PackURL + "play.png",

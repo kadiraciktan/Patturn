@@ -3,6 +3,7 @@ import { UIManager } from "../ui.manager";
 import { ScenesEnum } from "./scenes";
 import { Scene } from "./Scene";
 import { IngamePackKeysEnum, ingamepack } from "../assetpacks";
+// import { MenuComponent } from "../components/menu.component";
 
 export class InGameScene extends Scene {
   platforms: Phaser.Physics.Arcade.StaticGroup;
@@ -18,7 +19,7 @@ export class InGameScene extends Scene {
   patternGroup: Phaser.Physics.Arcade.Group;
   blackCirclePosition: Phaser.Math.Vector2;
   whiteCirclePosition: Phaser.Math.Vector2;
-
+  // menu = new MenuComponent(this);
   score = 0;
 
   scoreText: Phaser.GameObjects.Text;
@@ -32,15 +33,18 @@ export class InGameScene extends Scene {
   }
 
   preload() {
-    this.load.setBaseURL("src/assets/");
     this.load.image("pattern", "yinyang.svg");
     this.load.image("whitecircle", "whitecircle.svg");
     this.load.image("grassplace", "places/grass.jpg");
 
     this.AssetPackLoader(ingamepack);
+    // this.menu.preload();
   }
 
   create() {
+    // this.menu.draw();
+    // this.menu.show();
+
     // this.createLogTexts();
     let width = this.game.config.width as number;
     let height = this.game.config.height as number;
@@ -171,7 +175,7 @@ export class InGameScene extends Scene {
       this.pattern.setPosition(screenCenterX, screenCenterY);
       this.cameras.resize(width, height);
     });
-    
+
     this.pattern.setInteractive();
 
     this.pattern.on("pointerdown", () => {
