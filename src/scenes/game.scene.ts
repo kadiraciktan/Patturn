@@ -12,5 +12,9 @@ export class GameScene extends Scene {
   }
   create() {
     this.add.image(400, 300, "logo");
+
+    this.mainMenu.eventEmitter.on("play", () => {
+      console.log("start");
+    });
   }
 }

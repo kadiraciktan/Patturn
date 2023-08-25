@@ -11,6 +11,7 @@ export class MainMenuGameObject implements IGameObject {
   container: Phaser.GameObjects.Container;
   rect: Phaser.GameObjects.Rectangle;
   borderPadding: number = 20;
+  eventEmitter: Phaser.Events.EventEmitter = new Phaser.Events.EventEmitter();
 
   constructor(public gameScene: Scene) {}
 
@@ -42,19 +43,7 @@ export class MainMenuGameObject implements IGameObject {
     );
     this.rect.setStrokeStyle(4, 0x6666ff);
     this.rect.setInteractive();
-
-    this.gameScene.add
-      .graphics()
-      .fillStyle(0x6666ff)
-      .fillRoundedRect(
-        rectGeom.x,
-        rectGeom.y,
-        rectGeom.width,
-        rectGeom.height,
-        borderRadius
-      );
     this.container.add(this.rect);
-
     this.container.setDepth(1);
 
     const menuText = this.gameScene.add.text(0, 0, "Patturn", {
@@ -66,6 +55,19 @@ export class MainMenuGameObject implements IGameObject {
       CalculatePercentage(30, rectGeom.height)
     );
     this.container.add(menuText);
+    const PlayButton = this.gameScene.add
+      .image(
+        this.gameScene.screenCenterX,
+        this.gameScene.screenCenterY,
+        MenuPackKeysEnum.PlayButton
+      )
+      .setInteractive()
+      .setScale(0.3)
+      .on("pointerdown", () => {
+        this.hide();
+        this.eventEmitter.emit("play");
+      });
+    this.container.add(PlayButton);
   }
 
   update() {}

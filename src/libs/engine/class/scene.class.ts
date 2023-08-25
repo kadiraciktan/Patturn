@@ -1,6 +1,7 @@
+import { SceneInterface } from "../interfaces/scene.interface";
 import { PackFileConfigModel } from "../models";
 
-export class Scene extends Phaser.Scene {
+export class Scene extends Phaser.Scene implements SceneInterface {
   screenCenterX: number;
   screenCenterY: number;
   gameWidth: number;
@@ -19,17 +20,19 @@ export class Scene extends Phaser.Scene {
   }
 
   SceneCreate() {
+    window.screen.orientation.lock("portrait");
     this.scale.on("resize", this.resize, this);
     this.scale.on("orientationchange", this.orientationChange, this);
+    
   }
 
   private orientationChange(orientation: string) {
     this.recalibrate();
-    if (orientation.includes("portrait")) {
-      this.scale.setGameSize(this.gameWidth, this.gameHeight);
-    } else {
-      this.scale.setGameSize(this.gameHeight, this.gameWidth);
-    }
+    // if (orientation.includes("portrait")) {
+    //   this.scale.setGameSize(this.gameWidth, this.gameHeight);
+    // } else {
+    //   this.scale.setGameSize(this.gameHeight, this.gameWidth);
+    // }
   }
 
   private recalibrate() {
@@ -41,6 +44,8 @@ export class Scene extends Phaser.Scene {
     const { width, height } = gameSize;
     this.screenCenterX = width * 0.5;
     this.screenCenterY = height * 0.5;
+    this.cameras.resize(width, height);
+    this.recalibrate();
   }
 
   calculatePercentage = (percentage: number, total: number) => {

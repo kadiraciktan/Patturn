@@ -1,7 +1,7 @@
 export function SceneDecorator() {
   return function (target: any | undefined) {
     if (!target) {
-      console.error("SceneDecorator: target is undefined");
+      console.error("target is undefined");
       return;
     }
 
