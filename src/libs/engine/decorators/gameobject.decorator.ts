@@ -3,41 +3,41 @@ export function GameObject() {
     class DecoratedComponent extends target {
       constructor(...args: any[]) {
         super(...args);
-        if (this.scene) {
+        if (this.gameScene) {
           if (
-            this.scene.preload &&
-            typeof this.scene.preload === "function" &&
+            this.gameScene.preload &&
+            typeof this.gameScene.preload === "function" &&
             this.preload &&
             typeof this.preload === "function"
           ) {
-            const preload = this.scene.preload.bind(this.scene);
-            this.scene.preload = () => {
+            const preload = this.gameScene.preload.bind(this.gameScene);
+            this.gameScene.preload = () => {
               preload();
               this.preload();
             };
           }
 
           if (
-            this.scene.create &&
-            typeof this.scene.create === "function" &&
+            this.gameScene.create &&
+            typeof this.gameScene.create === "function" &&
             this.create &&
             typeof this.create === "function"
           ) {
-            const create = this.scene.create.bind(this.scene);
-            this.scene.create = () => {
+            const create = this.gameScene.create.bind(this.gameScene);
+            this.gameScene.create = () => {
               create();
               this.create();
             };
           }
 
           if (
-            this.scene.update &&
-            typeof this.scene.update === "function" &&
+            this.gameScene.update &&
+            typeof this.gameScene.update === "function" &&
             this.update &&
             typeof this.update === "function"
           ) {
-            const update = this.scene.update.bind(this.scene);
-            this.scene.update = () => {
+            const update = this.gameScene.update.bind(this.gameScene);
+            this.gameScene.update = () => {
               update();
               this.update();
             };

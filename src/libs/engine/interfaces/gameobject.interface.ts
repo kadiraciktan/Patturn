@@ -1,5 +1,7 @@
+import { Scene } from "../class";
+
 export interface IGameObject {
-  scene: Phaser.Scene;
+  gameScene: Scene;
   preload();
   create();
   update();
