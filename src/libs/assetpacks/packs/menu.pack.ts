@@ -1,6 +1,6 @@
 import { PackFileConfigModel } from "@patturn/engine";
 
-export enum MenuPackKeysEnum {
+export enum BUTTON_PACK {
   PlayButton = "playbutton",
   SettingsButton = "settingsbutton",
   BackButton = "backbutton",
@@ -8,24 +8,24 @@ export enum MenuPackKeysEnum {
 }
 const PackURL = "menus/square/";
 
-export const MenuPack: PackFileConfigModel[] = [
+export const ButtonPack: PackFileConfigModel[] = [
   {
-    key: MenuPackKeysEnum.PlayButton,
+    key: BUTTON_PACK.PlayButton,
     url: PackURL + "play.png",
     type: "image",
   },
   {
-    key: MenuPackKeysEnum.SettingsButton,
+    key: BUTTON_PACK.SettingsButton,
     url: PackURL + "settings.png",
     type: "image",
   },
   {
-    key: MenuPackKeysEnum.BackButton,
+    key: BUTTON_PACK.BackButton,
     url: PackURL + "back.png",
     type: "image",
   },
   {
-    key: MenuPackKeysEnum.NextButton,
+    key: BUTTON_PACK.NextButton,
     url: PackURL + "next.png",
     type: "image",
   },

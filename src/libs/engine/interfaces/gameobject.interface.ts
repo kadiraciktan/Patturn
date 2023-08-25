@@ -1,7 +1,7 @@
 import { Scene } from "../class";
 
 export interface IGameObject {
-  gameScene: Scene;
+  scene: Scene;
   preload();
   create();
   update();
