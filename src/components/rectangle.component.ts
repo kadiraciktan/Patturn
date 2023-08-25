@@ -1,14 +1,11 @@
-import { Component } from "@patturn/lib";
+import { GameObject, IGameObject } from "@patturn/lib";
 
-@Component()
-export class RectangleComponent {
+@GameObject()
+export class RectangleComponent implements IGameObject {
   constructor(public scene: Phaser.Scene) {}
+  update() {}
 
-  preload() {
-    console.log("MyComponent's preload function");
-  }
+  preload() {}
 
-  create() {
-    console.log("MyComponent's create function");
-  }
+  create() {}
 }

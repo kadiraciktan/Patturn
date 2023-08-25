@@ -1,4 +1,4 @@
-export function Component() {
+export function GameObject() {
   return function (target: any) {
     class DecoratedComponent extends target {
       constructor(...args: any[]) {
