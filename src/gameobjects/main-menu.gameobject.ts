@@ -8,6 +8,14 @@ export enum MENU_EVENTS {
   ADS = "ads",
   Retry = "retry",
   Back = "back",
+  Home = "home",
+  InGame = "ingame",
+}
+
+export enum MenuStateEnum {
+  Play = "play",
+  Settings = "settings",
+  InGame = "ingame",
 }
 
 @GameObject()
@@ -16,19 +24,24 @@ export class MainMenuGameObject implements IGameObject {
   container: Phaser.GameObjects.Container;
   events: Phaser.Events.EventEmitter = new Phaser.Events.EventEmitter();
   menuRectangle: Phaser.GameObjects.Rectangle;
-  menuState: MENU_EVENTS = MENU_EVENTS.Play;
+  menuState: MenuStateEnum = MenuStateEnum.Play;
+  PlayButton: Phaser.GameObjects.Image;
+  SettingsButton: Phaser.GameObjects.Image;
+  BackButton: Phaser.GameObjects.Image;
+  HomeButton: Phaser.GameObjects.Image;
 
   constructor(public scene: Scene) {}
 
   preload() {}
 
   create() {
-    if (this.menuState === MENU_EVENTS.Play) {
+    if (this.menuState === MenuStateEnum.Play) {
       this.drawPlayScreen();
-    }
-
-    if (this.menuState === MENU_EVENTS.Settings) {
-      this.drawSettingsScreen();
+      this.drawPlayButton();
+      this.drawSettingsButton();
+      this.drawHomeButton();
+      this.drawBackButton();
+      this.PlayButton.setVisible(true);
     }
   }
 
@@ -46,7 +59,11 @@ export class MainMenuGameObject implements IGameObject {
       this.scene.calculatePercentage(30, rectGeom.height)
     );
     this.container.add(menuText);
-    const PlayButton = this.scene.add
+    this.container.setVisible(true);
+  }
+
+  drawPlayButton() {
+    const playButton = this.scene.add
       .image(
         this.scene.screenCenterX,
         this.scene.screenCenterY,
@@ -54,32 +71,54 @@ export class MainMenuGameObject implements IGameObject {
       )
       .setInteractive()
       .setScale(0.3)
+      .setVisible(false)
       .on("pointerdown", () => {
-        this.events.emit(MENU_EVENTS.Play);
+        this.events.emit(MENU_EVENTS.InGame);
       });
 
-    this.container.add(PlayButton);
-    this.container.setVisible(true);
+    this.PlayButton = playButton;
+    return playButton;
   }
 
   drawSettingsButton() {
-    return this.scene.add
+    const settingsButton = this.scene.add
       .image(25, 25, BUTTON_PACK.SettingsButton)
       .setInteractive()
       .setScale(0.2)
+      .setVisible(false)
       .on("pointerdown", () => {
         this.events.emit(MENU_EVENTS.Settings);
       });
+
+    this.SettingsButton = settingsButton;
+    return settingsButton;
   }
 
   drawBackButton() {
-    return this.scene.add
+    const backbutton = this.scene.add
       .image(25, 25, BUTTON_PACK.BackButton)
       .setInteractive()
       .setScale(0.2)
+      .setVisible(false)
       .on("pointerdown", () => {
-        this.events.emit(MENU_EVENTS.Back);
+        this.events.emit(MENU_EVENTS.InGame);
       });
+
+    this.BackButton = backbutton;
+    return backbutton;
+  }
+
+  drawHomeButton() {
+    const homeButton = this.scene.add
+      .image(this.scene.gameWidth - 25, 25, BUTTON_PACK.HomeButton)
+      .setInteractive()
+      .setScale(0.2)
+      .setVisible(false)
+      .on("pointerdown", () => {
+        this.events.emit(MENU_EVENTS.Home);
+      });
+    this.HomeButton = homeButton;
+    return homeButton;
   }
 
   drawSettingsScreen() {
@@ -96,20 +135,18 @@ export class MainMenuGameObject implements IGameObject {
       this.scene.calculatePercentage(30, rectGeom.height)
     );
     this.container.add(menuText);
-    const BackButton = this.drawBackButton();
-    this.container.add(BackButton);
+    this.BackButton = this.drawBackButton();
+    this.container.add(this.BackButton);
     this.container.setVisible(true);
   }
 
   update() {}
 
   show() {
-    this.isActive = true;
-    this.container.setVisible(this.isActive);
+    this.container.setVisible(true);
   }
 
   hide() {
-    this.isActive = false;
-    this.container.setVisible(this.isActive);
+    this.container.setVisible(false);
   }
 }
