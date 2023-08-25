@@ -8,9 +8,11 @@ export class TestScene extends Phaser.Scene {
     super("TestScene");
   }
   preload() {
+    this.load.image("logo", "yinyang.svg");
     console.log("TestScene Preload");
   }
   create() {
+    this.add.image(400, 300, "logo");
     console.log("TestScene Create");
   }
 }

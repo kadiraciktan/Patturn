@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
     "lib": [
       "ESNext",
       "DOM"
@@ -14,6 +15,12 @@
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "strictPropertyInitialization": false,
+    "baseUrl": "./",
     "outDir": "./dist", /* Redirect output structure to the directory. */
+    "paths": {
+      "@patturn/lib": [
+        "src/libs/index.ts"
+      ]
+    }
   }
 }

@@ -7,4 +7,4 @@ export enum ScenesEnum {
   SettingsScene = "SettingsScene",
   InGameScene = "InGameScene",
 }
-export const Scenes = [TestScene,InGameScene,MainMenuScene, SettingsScene];
+export const Scenes = [TestScene];

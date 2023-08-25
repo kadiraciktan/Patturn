@@ -1,8 +1,7 @@
-import { Component } from "../decorators";
+import { Component } from "@patturn/lib";
 
 @Component()
 export class RectangleComponent {
-  
   constructor(public scene: Phaser.Scene) {}
 
   preload() {
@@ -12,5 +11,4 @@ export class RectangleComponent {
   create() {
     console.log("MyComponent's create function");
   }
-
 }

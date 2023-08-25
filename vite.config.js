@@ -1,13 +1,20 @@
+import tsconfigPaths from "vite-tsconfig-paths";
 export default {
-  root: "./",
-  base: "./", // Bu satırı ekleyin
+  base: "./",
+
   build: {
     outDir: "dist",
-    assetsDir: "assets",
+    lib: {
+      entry: "src/index.ts",
+      name: "patturn",
+      fileName: (format) => `patturn.js`,
+    },
+    assetsDir: "src/assets",
     rollupOptions: {
       input: {
         main: "./index.html",
       },
     },
   },
+  plugins: [tsconfigPaths()],
 };
