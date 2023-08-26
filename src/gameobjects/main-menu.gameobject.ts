@@ -1,12 +1,14 @@
 import { BUTTON_PACK, ButtonPack } from "@patturn/assetpacks";
 import { GameObject, IGameObject, Scene } from "@patturn/engine";
 import { drawMenuRect } from "./menu-rect";
+import { Preferences } from "@capacitor/preferences";
 
 export enum MENU_EVENTS {
   MainMenu = "mainMenu",
   Settings = "settings",
   InGame = "ingame",
   Ads = "ads",
+  GameOver = "gameover",
 }
 
 @GameObject()
@@ -20,17 +22,60 @@ export class MainMenuGameObject implements IGameObject {
   HomeButton: Phaser.GameObjects.Image;
   ContinueButton: Phaser.GameObjects.Image;
   RestartButton: Phaser.GameObjects.Image;
+  private Depth = 9;
 
   constructor(public scene: Scene) {}
 
   preload() {}
 
   create() {
-    this.container = this.scene.add.container(0, 0);
+    this.container = this.scene.add.container(0, 0).setDepth(this.Depth);
     this.drawButtons();
     this.drawMenuScreen("Patturn");
     this.PlayButton.setVisible(true);
     this.container.add(this.PlayButton);
+    this.drawHighScoreText();
+  }
+
+  drawHighScoreText() {
+    Preferences.get({ key: "highscore" }).then((result) => {
+      if (result.value === null) {
+        Preferences.set({ key: "highscore", value: "0" });
+        result.value = "0";
+      }
+
+      // add highscore text
+      const highScoreText = this.scene.add.text(0, 0, "High Score", {
+        fontSize: "32px",
+        color: "#000",
+      });
+      const highScoreTextGeom = highScoreText.getBounds();
+
+      const highScoreValueText = this.scene.add.text(0, 0, result.value, {
+        fontSize: "32px",
+        color: "#000",
+      });
+
+      const highScoreValueTextGeom = highScoreValueText.getBounds();
+      highScoreValueText.setPosition(
+        this.scene.calculatePercentage(
+          50,
+          this.scene.gameWidth - highScoreValueTextGeom.width
+        ),
+        this.scene.calculatePercentage(15, this.scene.gameHeight)
+      );
+
+      this.container.add(highScoreValueText);
+
+      highScoreText.setPosition(
+        this.scene.calculatePercentage(
+          50,
+          this.scene.gameWidth - highScoreTextGeom.width
+        ),
+        this.scene.calculatePercentage(10, this.scene.gameHeight)
+      );
+      this.container.add(highScoreText);
+    });
   }
 
   drawHeaderText(headerText: string, rectGeom: Phaser.Geom.Rectangle) {
@@ -47,7 +92,9 @@ export class MainMenuGameObject implements IGameObject {
   }
 
   drawMenuScreen(headerText: string) {
-    this.menuRectangle = drawMenuRect(this.scene, 0xffffff, 0x000000);
+    this.menuRectangle = drawMenuRect(this.scene, 0xffffff, 0x000000).setDepth(
+      this.Depth
+    );
     this.container.add(this.menuRectangle);
     const rectGeom = this.menuRectangle.getBounds();
     this.drawHeaderText(headerText, rectGeom);
@@ -77,7 +124,7 @@ export class MainMenuGameObject implements IGameObject {
       .setInteractive()
       .setScale(0.3)
       .setVisible(false)
-      .setDepth(1)
+      .setDepth(this.Depth)
       .on("pointerdown", () => {
         this.container.setVisible(false);
         this.SettingsButton.setVisible(true);
@@ -95,7 +142,7 @@ export class MainMenuGameObject implements IGameObject {
       .image(25, 25, BUTTON_PACK.SettingsButton)
       .setInteractive()
       .setScale(0.2)
-      .setDepth(1)
+      .setDepth(this.Depth)
       .setVisible(false)
       .on("pointerdown", () => {
         this.drawMenuScreen("Settings");
@@ -114,7 +161,7 @@ export class MainMenuGameObject implements IGameObject {
       .image(25, 25, BUTTON_PACK.BackButton)
       .setInteractive()
       .setScale(0.2)
-      .setDepth(1)
+      .setDepth(this.Depth)
       .setVisible(false)
       .on("pointerdown", () => {
         this.events.emit(MENU_EVENTS.InGame);
@@ -136,7 +183,7 @@ export class MainMenuGameObject implements IGameObject {
         BUTTON_PACK.RestartButton
       )
       .setInteractive()
-      .setDepth(1)
+      .setDepth(this.Depth)
       .setScale(0.3)
       .setVisible(false)
       .on("pointerdown", () => {
@@ -152,7 +199,7 @@ export class MainMenuGameObject implements IGameObject {
     const homeButton = this.scene.add
       .image(this.scene.gameWidth - 25, 25, BUTTON_PACK.HomeButton)
       .setInteractive()
-      .setDepth(1)
+      .setDepth(this.Depth)
       .setScale(0.2)
       .setVisible(false)
       .on("pointerdown", () => {
@@ -179,8 +226,6 @@ export class MainMenuGameObject implements IGameObject {
     this.ContinueButton = continueButton;
     return continueButton;
   }
-
-
 
   drawSettingsScreen() {
     this.menuRectangle = drawMenuRect(this.scene, 0xffffff, 0x000000);

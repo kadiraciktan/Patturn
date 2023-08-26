@@ -10,11 +10,14 @@ import {
   SpinWheelGameObject,
 } from "src/gameobjects";
 
+import { Preferences } from "@capacitor/preferences";
+
 @SceneDecorator()
 export class GameScene extends Scene {
   mainMenu = new MainMenuGameObject(this);
   spinWheel = new SpinWheelGameObject(this);
   score: number = 0;
+  currentLives: number = 5;
 
   constructor() {
     super("TestScene");
@@ -45,17 +48,33 @@ export class GameScene extends Scene {
     cover.setOrigin(0, 0);
     cover.setDepth(0);
 
-    const scoreText = this.add
-      .text(0, 10, this.score.toString(), {
-        fontSize: "32px",
-        color: "#fff",
-        fontStyle: "bold",
-        backgroundColor: "#000",
-      })
-      .setVisible(false);
+    const scoreText = this.add.text(0, 10, this.score.toString(), {
+      fontSize: "32px",
+      color: "#fff",
+      fontStyle: "bold",
+      backgroundColor: "#000",
+      padding: {
+        left: 10,
+        right: 10,
+        top: 5,
+        bottom: 5,
+      },
+    });
 
     const menuTextGeom = scoreText.getBounds();
     scoreText.setPosition(this.screenCenterX - menuTextGeom.width / 2, 10);
+    scoreText.setVisible(false);
+
+    Preferences.remove({ key: "score" });
+
+    Preferences.get({ key: "score" }).then((result) => {
+      if (result.value) {
+        this.score = parseInt(result.value);
+        scoreText.setText(`${this.score}`);
+        const scoreTextGeom = scoreText.getBounds();
+        scoreText.setPosition(this.screenCenterX - scoreTextGeom.width / 2, 10);
+      }
+    });
 
     this.mainMenu.events.on(MENU_EVENTS.InGame, () => {
       scoreText.setVisible(true);
@@ -71,18 +90,34 @@ export class GameScene extends Scene {
       scoreText.setVisible(false);
       this.spinWheel.isActive = false;
     });
-    this.mainMenu.container.depth = 1;
+
+    this.mainMenu.events.on(MENU_EVENTS.GameOver, () => {
+      Preferences.set({ key: "highscore", value: this.score.toString() });
+    });
 
     this.spinWheel.show();
-    this.spinWheel.events.on(MOUSE_EVENTS.CLICK, () => {
-      this.spinWheel.currentSpeed += 1;
+    this.spinWheel.events.on(MOUSE_EVENTS.TRUE_CLICK, () => {
       this.score += 1;
+      let speed = 0.5;
+      let increaseLevel = 1;
+      if (this.score > 3) {
+        increaseLevel /= 2;
+      }
+      speed = increaseLevel;
+      this.spinWheel.currentSpeed += speed;
       scoreText.setText(`${this.score}`);
-
       const scoreTextGeom = scoreText.getBounds();
       scoreText.setPosition(this.screenCenterX - scoreTextGeom.width / 2, 10);
     });
 
-    this.spinWheel.gameObject.setDepth(1);
+    this.spinWheel.events.on(MOUSE_EVENTS.FALSE_CLICK, () => {
+      this.cameras.main.shake(100, 0.002);
+      this.spinWheel.gameObject.setTint(0xff0000);
+      setTimeout(() => {
+        this.spinWheel.gameObject.clearTint();
+      }, 100);
+    });
   }
+
+  saveHighScore() {}
 }

@@ -6,4 +6,6 @@ export enum MOUSE_EVENTS {
   MOUSE_OVER = "mouseover",
   MOUSE_OUT = "mouseout",
   MOUSE_WHEEL = "wheel",
+  TRUE_CLICK = "trueclick",
+  FALSE_CLICK = "falseclick",
 }

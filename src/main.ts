@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import { Scenes } from "./scenes";
-import { ImageLoaderPlugin } from "./plugins";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -19,6 +18,12 @@ const config: Phaser.Types.Core.GameConfig = {
   autoCenter: Phaser.Scale.CENTER_BOTH,
   loader: {
     baseURL: "src/assets/",
+  },
+
+  fps: {
+    target: 60,
+    min: 60,
+    forceSetTimeOut: true,
   },
 };
 

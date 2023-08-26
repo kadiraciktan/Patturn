@@ -2,6 +2,7 @@ import { PackFileConfigModel } from "@patturn/engine";
 
 export enum IngamePackKeysEnum {
   YinYangWheel = "yinyangwheel",
+  WhiteCircle = "whitecircle",
   Background1 = "background1",
   Background2 = "background2",
   Background3 = "background3",
@@ -10,6 +11,11 @@ export enum IngamePackKeysEnum {
 const PackURL = "gfx/";
 
 export const IngamePack: PackFileConfigModel[] = [
+  {
+    key: IngamePackKeysEnum.WhiteCircle,
+    url: PackURL + "whitecircle.svg",
+    type: "image",
+  },
   {
     key: IngamePackKeysEnum.YinYangWheel,
     url: PackURL + "yinyang.svg",
