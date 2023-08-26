@@ -1,6 +1,10 @@
 import { Scene } from "@patturn/engine";
 
-export const drawMenuRect = (scene: Scene) => {
+export const drawMenuRect = (
+  scene: Scene,
+  bgColor: number,
+  borderColor: number
+) => {
   const rectWidth = scene.gameWidth - 20 * 2;
   const rectHeight = scene.gameHeight - 20 * 2;
   const rectPositionX = 20;
@@ -17,9 +21,9 @@ export const drawMenuRect = (scene: Scene) => {
     rectGeom.centerY,
     rectWidth,
     rectHeight,
-    0x6666ff
+    bgColor
   );
-  rect.setStrokeStyle(4, 0x6666ff);
+  rect.setStrokeStyle(4, borderColor);
   rect.setInteractive();
   return rect;
 };

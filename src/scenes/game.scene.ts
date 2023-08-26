@@ -1,9 +1,12 @@
-import { IngamePack, ButtonPack } from "@patturn/assetpacks";
+import {
+  IngamePack,
+  ButtonPack,
+  IngamePackKeysEnum,
+} from "@patturn/assetpacks";
 import { MOUSE_EVENTS, Scene, SceneDecorator } from "@patturn/engine";
 import {
   MENU_EVENTS,
   MainMenuGameObject,
-  MenuStateEnum,
   SpinWheelGameObject,
 } from "src/gameobjects";
 
@@ -12,6 +15,7 @@ export class GameScene extends Scene {
   mainMenu = new MainMenuGameObject(this);
   spinWheel = new SpinWheelGameObject(this);
   score: number = 0;
+
   constructor() {
     super("TestScene");
   }
@@ -20,80 +24,65 @@ export class GameScene extends Scene {
     this.AssetPackLoader(ButtonPack);
   }
   create() {
-    // draw Score Text
+    const bg = this.add.image(0, 0, IngamePackKeysEnum.Background3);
+    bg.setOrigin(0, 0);
+
+    const bgGeom = bg.getBounds();
+    bg.setPosition(
+      this.screenCenterX - bgGeom.width / 2,
+      this.screenCenterY - bgGeom.height / 2
+    );
+
+    // cover black alpha 0.5
+    const cover = this.add.rectangle(
+      0,
+      0,
+      this.gameWidth,
+      this.gameHeight,
+      0x000000,
+      0.4
+    );
+    cover.setOrigin(0, 0);
+    cover.setDepth(0);
 
     const scoreText = this.add
-      .text(0, 0, "Score: 0", {
+      .text(0, 10, this.score.toString(), {
         fontSize: "32px",
-        color: "#000",
+        color: "#fff",
+        fontStyle: "bold",
+        backgroundColor: "#000",
       })
       .setVisible(false);
 
     const menuTextGeom = scoreText.getBounds();
-    scoreText.setPosition(
-      this.screenCenterX - menuTextGeom.width / 2,
-      menuTextGeom.height
-    );
+    scoreText.setPosition(this.screenCenterX - menuTextGeom.width / 2, 10);
 
     this.mainMenu.events.on(MENU_EVENTS.InGame, () => {
       scoreText.setVisible(true);
       this.spinWheel.isActive = true;
-      this.mainMenu.menuState = MenuStateEnum.InGame;
-      this.mainMenu.hide();
-      this.mainMenu.PlayButton.setVisible(false);
-      this.mainMenu.SettingsButton.setVisible(true);
-      this.mainMenu.HomeButton.setVisible(true);
-      this.mainMenu.RestartButton.setVisible(false);
-      this.mainMenu.BackButton.setVisible(false);
     });
 
     this.mainMenu.events.on(MENU_EVENTS.Settings, () => {
-      this.spinWheel.isActive = false;
-      scoreText.setVisible(false);
-      this.mainMenu.menuState = MenuStateEnum.Settings;
-      this.mainMenu.hide();
-      this.mainMenu.BackButton.setVisible(true);
-      this.mainMenu.PlayButton.setVisible(false);
-      this.mainMenu.SettingsButton.setVisible(false);
-      this.mainMenu.HomeButton.setVisible(false);
-      this.mainMenu.RestartButton.setVisible(false);
-      this.mainMenu.drawSettingsScreen();
-    });
-
-    this.mainMenu.events.on(MENU_EVENTS.Home, () => {
       scoreText.setVisible(false);
       this.spinWheel.isActive = false;
-      this.mainMenu.menuState = MenuStateEnum.Home;
-      this.mainMenu.show();
-      this.mainMenu.drawPlayScreen();
-      this.mainMenu.PlayButton.setVisible(true);
-      this.mainMenu.HomeButton.setVisible(false);
-      this.mainMenu.BackButton.setVisible(false);
-      this.mainMenu.SettingsButton.setVisible(false);
-      this.mainMenu.PlayButton.x = this.screenCenterX - 30;
-      this.mainMenu.RestartButton.x = this.screenCenterX + 35;
-      this.mainMenu.RestartButton.setVisible(true);
     });
 
-    this.mainMenu.events.on(MENU_EVENTS.Retry, () => {
-      this.mainMenu.menuState = MenuStateEnum.InGame;
-      this.mainMenu.hide();
-      this.mainMenu.PlayButton.setVisible(false);
-      this.mainMenu.SettingsButton.setVisible(true);
-      this.mainMenu.HomeButton.setVisible(true);
-      this.mainMenu.RestartButton.setVisible(false);
-      this.spinWheel.isActive = true;
-      this.score = 0;
-      scoreText.setText(`Score: ${this.score}`);
-      this.spinWheel.currentSpeed = 1;
-      scoreText.setVisible(true);
+    this.mainMenu.events.on(MENU_EVENTS.MainMenu, () => {
+      scoreText.setVisible(false);
+      this.spinWheel.isActive = false;
     });
+    this.mainMenu.container.depth = 1;
 
     this.spinWheel.show();
     this.spinWheel.events.on(MOUSE_EVENTS.CLICK, () => {
       this.spinWheel.currentSpeed += 1;
       this.score += 1;
-      scoreText.setText(`Score: ${this.score}`);
+      scoreText.setText(`${this.score}`);
+
+      const scoreTextGeom = scoreText.getBounds();
+      scoreText.setPosition(this.screenCenterX - scoreTextGeom.width / 2, 10);
     });
+
+    this.spinWheel.gameObject.setDepth(1);
   }
 }
